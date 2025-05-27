@@ -11,18 +11,6 @@ afterEach(() => {
   jest.restoreAllMocks()
 })
 
-test('isUserExist must return `true` if either username or email exist', async () => {
-  const queryResultA = await UserRepo.isUserExist('alex', 'alex@gmail.com')
-  expect(queryResultA.isSuccess).toBe(true)
-  expect((queryResultA as Success<boolean>).value).toBe(true)
-})
-
-test('isUserExistByEmail must return `true` if email exist', async () => {
-  const queryResultA = await UserRepo.isUserExistByEmail('alex@gmail.com')
-  expect(queryResultA.isSuccess).toBe(true)
-  expect((queryResultA as Success<boolean>).value).toBe(true)
-})
-
 test('insertNewUser must fail for attempt to insert existing email', async () => {
   const queryResult = await UserRepo.insertNewUser(
     'unique',

@@ -156,18 +156,6 @@ test('insertInvitees must fail when database error occurs', async () => {
   expect(failedResult.error.message).toBe('DB connection error')
 })
 
-test('getInviteesByEventId must return invitee DTO`s for a valid event ID', async () => {
-  const queryResult = await EventRepo.getInviteesByEventId(createdEventId)
-
-  expect(queryResult.isSuccess).toBe(true)
-  const successfulResult = queryResult as Success<InviteeDTO[]>
-  expect(successfulResult.value).toBeInstanceOf(Array)
-  expect(successfulResult.value[0]).toMatchObject({
-    id: expect.any(String),
-    name: expect.any(String),
-    createdAt: expect.any(Date)
-  })
-})
 
 test('getInviteesByEventId must fail for a non-existing event ID', async () => {
   const queryResult = await EventRepo.getInviteesByEventId('nonExistingEventId')

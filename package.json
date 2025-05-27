@@ -8,7 +8,8 @@
     "db:apply-migrations": "bun run ./src/db/postgres/migrations/migrationRunner.ts",
     "db:apply-migrations-local": "bun --env-file=.env run ./src/db/postgres/migrations/migrationRunner.ts",
     "test:routes": "jest --detectOpenHandles --forceExit ./dist/app/routes/*",
-    "test:single": "bun test ./src/routes/eventsRoutes.test.ts"
+    "test:single": "bun test ./src/routes/eventsRoutes.test.ts",
+    "test": "bun test --coverage ./src/**/*.test.ts"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.3.0",

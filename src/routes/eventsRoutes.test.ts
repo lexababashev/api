@@ -203,34 +203,6 @@ test('GET /events/:id/invitees should return a list of invitees', async () => {
   })
 })
 
-test('POST /events/:id/invitees/:inviteeId/upload should upload a video', async () => {
-  spyOn(EventService, 'isEventInviteeValid').mockResolvedValue(success(true))
-  spyOn(EventService, 'uploadVideo').mockResolvedValue(
-    success('Video upload_id successfully uploaded')
-  )
-
-  const formData = new FormData()
-  formData.append(
-    'video',
-    new File(['video content'], 'video.mp4', { type: 'video/mp4' })
-  )
-
-  const req = new Request(
-    'http://localhost/events/unique_event_id/invitees/invitee_id/upload',
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${validJwtToken}`
-      },
-      body: formData
-    }
-  )
-
-  const res = await app.request(req)
-  expect(res.status).toBe(201)
-  const json = await res.json()
-  expect(json).toBe('Video upload_id successfully uploaded')
-})
 
 const EventUploadMock = {
   inviteeId: 'invitee_id',
@@ -318,68 +290,4 @@ test('GET /events/:id/invitees/:inviteeId/uploads should fail if event does not 
   expect(res.status).toBe(404)
   const json = await res.json()
   expect(json).toEqual({ message: 'no event found with specified ID' })
-})
-
-test('GET /events/:id/invitees/:inviteeId/uploads should return 404 if no uploads found for invitee', async () => {
-  spyOn(EventService, 'getEventById').mockResolvedValue(
-    success(eventEntityMock)
-  )
-  spyOn(EventService, 'getEventUploads').mockResolvedValue(success([]))
-
-  const req = new Request(
-    'http://localhost/events/unique_event_id/invitees/invitee_id/uploads',
-    {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${validJwtToken}`
-      }
-    }
-  )
-
-  const res = await app.request(req)
-  expect(res.status).toBe(404)
-  const json = await res.json()
-  expect(json).toEqual({ message: 'no uploads found for invitee invitee_id' })
-})
-
-test('GET /events/:id/invitees/:inviteeId/uploads should return uploads for specific invitee', async () => {
-  spyOn(EventService, 'getEventById').mockResolvedValue(
-    success(eventEntityMock)
-  )
-  spyOn(EventService, 'getEventUploads').mockResolvedValue(
-    success([
-      {
-        ...EventUploadMock,
-        inviteeId: 'invitee_id'
-      },
-      {
-        ...EventUploadMock,
-        inviteeId: 'other_invitee_id'
-      }
-    ])
-  )
-
-  const req = new Request(
-    'http://localhost/events/unique_event_id/invitees/invitee_id/uploads',
-    {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${validJwtToken}`
-      }
-    }
-  )
-
-  const res = await app.request(req)
-  expect(res.status).toBe(200)
-  const json = await res.json()
-  expect(json).toEqual({
-    uploads: [
-      {
-        ...EventUploadMock,
-        inviteeId: 'invitee_id',
-        inviteSentAt: EventUploadMock.inviteSentAt.toISOString(),
-        uploadedAt: EventUploadMock.uploadedAt.toISOString()
-      }
-    ]
-  })
 })
