@@ -1,10 +1,5 @@
 import { test, beforeEach, afterEach, expect, jest, spyOn } from 'bun:test'
-import EventRepo, {
-  EventEntity,
-  EventInviteeDTO,
-  EventUploadsDTO,
-  InviteeDTO
-} from './eventRepo'
+import EventRepo, { EventEntity, InviteeDTO } from './eventRepo'
 import { AppError, ErrorType, Failure, Success } from '../utils/types/results'
 import * as postgres from '../db/postgres/postgres'
 
@@ -18,10 +13,7 @@ afterEach(() => {
 })
 
 const userId = '99vMKx8fBg' //alex is the owner of the event and he always exists due to the seed data
-const filePath = 'http://localhost:4566/invitees-videos/testfile.mp4'
 let createdEventId: string
-let createdInviteeId: string
-let uploadId: string
 
 test('insertEvent must successfully insert a new event and return its ID', async () => {
   const queryResult = await EventRepo.insertEvent(
@@ -139,7 +131,6 @@ test('getEventById must fail when database error occurs', async () => {
   expect(failedResult.error.message).toBe('DB connection error')
 })
 
-
 test('insertInvitees must fail when the insertion does not happened because of invalid event key', async () => {
   const invitees = ['test_filed_Alice', 'test_filed_Bob', 'test_filed_Charlie']
   const queryResult = await EventRepo.insertInvitees(
@@ -200,7 +191,6 @@ test('getInviteesByEventId must fail when database error occurs', async () => {
   expect(failedResult.error.type).toBe(ErrorType.DatabaseError)
   expect(failedResult.error.message).toBe('DB connection error')
 })
-
 
 test('getEventUploads must fail for a non-existing event ID', async () => {
   const queryResult = await EventRepo.getEventUploads('nonExistingEventId')

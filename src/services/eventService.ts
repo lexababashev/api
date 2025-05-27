@@ -13,7 +13,6 @@ import eventRepo, {
 } from '../repos/eventRepo'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { UploadVideoReq } from '../models/eventsRequests'
-import { handleError } from '../utils/http/errorHandler'
 
 const s3 = new S3Client({
   region: process.env.S3_REGION as string,
@@ -118,7 +117,7 @@ export const EventService = {
       if (result.isSuccess) {
         const eventEntity = result.value
 
-        if (eventEntity.ownerId != userId) {
+        if (eventEntity.ownerId !== userId) {
           return failure(
             new AppError(
               ErrorType.BusinessLogicError,
@@ -304,8 +303,7 @@ export const EventService = {
       const fileName = `${eventId}-${new Date().getTime()}`
       const s3UploadPath = `${process.env.S3_URL}/${process.env.S3_COMPILED_BUCKET}/${fileName}`
 
-      const getCompiledUploadResult =
-        await eventRepo.getCompiledUpload(eventId)
+      const getCompiledUploadResult = await eventRepo.getCompiledUpload(eventId)
       if (getCompiledUploadResult.isFailure) {
         return failure(getCompiledUploadResult.error)
       }
@@ -337,7 +335,7 @@ export const EventService = {
       }
       const uploadCommand = new PutObjectCommand(params)
       const uploadResult = await s3.send(uploadCommand)
-      if (uploadResult.$metadata.httpStatusCode != 200) {
+      if (uploadResult.$metadata.httpStatusCode !== 200) {
         return failure(
           new AppError(
             ErrorType.InternalServerError,
@@ -400,7 +398,6 @@ export const EventService = {
         return failure(insertUploadResult.error)
       }
 
-
       const params = {
         Body: Buffer.from(await uploadVideoReq.video.arrayBuffer()),
         Bucket: process.env.S3_INVITEES_BUCKET as string,
@@ -409,7 +406,7 @@ export const EventService = {
       }
       const uploadCommand = new PutObjectCommand(params)
       const uploadResult = await s3.send(uploadCommand)
-      if (uploadResult.$metadata.httpStatusCode != 200) {
+      if (uploadResult.$metadata.httpStatusCode !== 200) {
         return failure(
           new AppError(
             ErrorType.InternalServerError,
@@ -452,14 +449,14 @@ export const EventService = {
   async getCompiledUpload(
     eventId: string
   ): Promise<Result<AppError, CompiledUploadDTO[]>> {
-try {
+    try {
       const result = await eventRepo.getCompiledUpload(eventId)
       if (result.isSuccess) {
         return success(result.value)
       } else {
         return failure(result.error)
       }
-    }catch (error: unknown) {
+    } catch (error: unknown) {
       return failure(
         new AppError(ErrorType.DatabaseError, (error as Error).message, 500)
       )

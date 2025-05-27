@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { jwt, jwt as jwtHono } from 'hono/jwt'
+import { jwt as jwtHono } from 'hono/jwt'
 import { reqValidator } from '../models/validators/validationMiddleware'
 import {
   CreateEventReq,
@@ -209,17 +209,15 @@ export const eventRoutes = (app: Hono) => {
         return c.json({ message: 'You have already uploaded a video' }, 403)
       }
 
-      const getCompiledUploadsResult = await EventService.getCompiledUpload(eventId)
-      
+      const getCompiledUploadsResult =
+        await EventService.getCompiledUpload(eventId)
+
       if (getCompiledUploadsResult.isFailure) {
         return handleError(getCompiledUploadsResult.error)
       }
 
       if (getCompiledUploadsResult.value.length !== 0) {
-        return c.json(
-          { message: 'The event has already been finished' },
-          403
-        )
+        return c.json({ message: 'The event has already been finished' }, 403)
       }
 
       const uploadVideoReq: UploadVideoReq = c.get(
@@ -267,10 +265,7 @@ export const eventRoutes = (app: Hono) => {
       }
 
       if (getCompiledUploadsResult.value.length !== 0) {
-        return c.json(
-          { message: 'The event has already been finished' },
-          403
-        )
+        return c.json({ message: 'The event has already been finished' }, 403)
       }
 
       const insertInviteesResult = await EventService.insertInvitees(
@@ -316,7 +311,7 @@ export const eventRoutes = (app: Hono) => {
         return handleError(getEventByIdResult.error)
       }
 
-      if (getEventByIdResult.value.ownerId != ownerId) {
+      if (getEventByIdResult.value.ownerId !== ownerId) {
         return c.json(
           `User "${ownerId}" is not owner of the event "${eventId}"`,
           403
@@ -347,10 +342,10 @@ export const eventRoutes = (app: Hono) => {
     if (getEventByIdResult.isFailure) {
       return handleError(getEventByIdResult.error)
     }
-    const getCompiledUploadsResult = await EventService.getCompiledUpload(eventId)
+    const getCompiledUploadsResult =
+      await EventService.getCompiledUpload(eventId)
     if (getCompiledUploadsResult.isFailure) {
       return handleError(getCompiledUploadsResult.error)
-
     }
 
     return c.json(getCompiledUploadsResult.value, 200)

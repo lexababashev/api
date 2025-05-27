@@ -90,7 +90,9 @@ export class CompiledUploadDTO {
     public uploadedAt: Date
   ) {}
 
-  static mapToCompiledUploadDTO(result: Record<string, string>): CompiledUploadDTO {
+  static mapToCompiledUploadDTO(
+    result: Record<string, string>
+  ): CompiledUploadDTO {
     return new CompiledUploadDTO(
       result.upload_id as string,
       result.upload_path as string,
@@ -425,7 +427,9 @@ export const EventRepo = {
     }
   },
 
-  async getCompiledUpload(eventId: string): Promise<Result<AppError, CompiledUploadDTO[]>> {
+  async getCompiledUpload(
+    eventId: string
+  ): Promise<Result<AppError, CompiledUploadDTO[]>> {
     try {
       const result = await postgres.query(
         'SELECT id AS upload_id,  file_path AS upload_path, created_at AS uploaded_at FROM compiled_uploads WHERE event_id = $1 LIMIT 1',
@@ -442,7 +446,6 @@ export const EventRepo = {
         new AppError(ErrorType.DatabaseError, (error as Error).message, 500)
       )
     }
-
   },
 
   async deleteUpload(

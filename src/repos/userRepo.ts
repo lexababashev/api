@@ -37,7 +37,7 @@ export const UserRepo = {
         'SELECT count(*) FROM users WHERE username = $1 OR email = $2 LIMIT 1',
         [username, email]
       )
-      return success(result.rows[0].count == 1)
+      return success(result.rows[0].count === 1)
     } catch (error: unknown) {
       return failure(
         new AppError(ErrorType.DatabaseError, (error as Error).message, 500)
@@ -50,7 +50,7 @@ export const UserRepo = {
         'SELECT count(*) FROM users WHERE email = $1 LIMIT 1',
         [email]
       )
-      return success(result.rows[0].count == 1)
+      return success(result.rows[0].count === 1)
     } catch (error: unknown) {
       return failure(
         new AppError(ErrorType.DatabaseError, (error as Error).message, 500)
