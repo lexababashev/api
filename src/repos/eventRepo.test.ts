@@ -1,5 +1,5 @@
 import { test, beforeEach, afterEach, expect, jest, spyOn } from 'bun:test'
-import EventRepo, { EventEntity, InviteeDTO } from './eventRepo'
+import EventRepo, { EventEntity } from './eventRepo'
 import { AppError, ErrorType, Failure, Success } from '../utils/types/results'
 import * as postgres from '../db/postgres/postgres'
 
@@ -155,7 +155,6 @@ test('insertInvitees must fail when database error occurs', async () => {
   expect(failedResult.error.type).toBe(ErrorType.DatabaseError)
   expect(failedResult.error.message).toBe('DB connection error')
 })
-
 
 test('getInviteesByEventId must fail for a non-existing event ID', async () => {
   const queryResult = await EventRepo.getInviteesByEventId('nonExistingEventId')

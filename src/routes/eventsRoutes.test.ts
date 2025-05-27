@@ -203,7 +203,6 @@ test('GET /events/:id/invitees should return a list of invitees', async () => {
   })
 })
 
-
 const EventUploadMock = {
   inviteeId: 'invitee_id',
   uploadId: 'upload_id',
